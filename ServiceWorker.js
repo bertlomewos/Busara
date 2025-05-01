@@ -1,9 +1,9 @@
 const cacheName = "efuyegela-Busara-1.0";
 const contentToCache = [
-    "Build/b8f9f5c33bec68a3f6770df9e16319c3.loader.js",
+    "Build/d9da49f08bfb7ef6796844ace0549776.loader.js",
     "Build/21e762c16e10316bf0cf5ec04bc081f0.framework.js.unityweb",
-    "Build/1bab08455cd714f5c85685b8402d8767.data.unityweb",
-    "Build/9985ee82f677792329fd7618f9f1996c.wasm.unityweb",
+    "Build/50f83a0f7d446a5057c4fcacb19e53d8.data.unityweb",
+    "Build/7e6cac0d96e0919807d77c2105986af5.wasm.unityweb",
     "TemplateData/style.css"
 
 ];
