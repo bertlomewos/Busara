@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="debug-console.css">
   <!-- Start loading assets right away, to have them (partly) loaded already when they are requested -->
-  <link rel="preload" href="Build//dba35ff2a7fbf61d675dee8e5760e02f.data.unityweb" as="fetch" type="application/octet-stream" crossorigin>
+  <link rel="preload" href="Build//6678493cea1600051bf543bdab3e8c8e.data.unityweb" as="fetch" type="application/octet-stream" crossorigin>
   <link rel="preload" href="Build/21e762c16e10316bf0cf5ec04bc081f0.framework.js.unityweb" as="script">
   <link rel="preload" href="Build/0cb6e3a01e78aeaeb7b924aa8d2b224f.wasm.unityweb" as="fetch" type="application/wasm" crossorigin>
   <title>Busara</title>
@@ -38,6 +38,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      background-color: #000000;
     }
 
     /* Default values, might be overwritten by aspect ratio media queries */
@@ -47,7 +48,21 @@
       background-color: #fff;
     }
 
+    @media (min-aspect-ratio: 3/1) {
+      #unity-canvas {
+        width: auto;
+        height: 100%;
+        aspect-ratio: 3/1;
+      }
+    }
 
+    @media (max-aspect-ratio: 1/2) {
+      #unity-canvas {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1/2;
+      }
+    }
 
     #unity-loading-container {
       position: absolute;
@@ -114,7 +129,7 @@
     var buildUrl = "Build";
     var loaderUrl = buildUrl + "/939ab9975171ddae6d039ba9ab91f704.loader.js";
     var config = {
-      dataUrl: buildUrl + "/dba35ff2a7fbf61d675dee8e5760e02f.data.unityweb",
+      dataUrl: buildUrl + "/6678493cea1600051bf543bdab3e8c8e.data.unityweb",
       frameworkUrl: buildUrl + "/21e762c16e10316bf0cf5ec04bc081f0.framework.js.unityweb",
       codeUrl: buildUrl + "/0cb6e3a01e78aeaeb7b924aa8d2b224f.wasm.unityweb",
       streamingAssetsUrl: "StreamingAssets",
