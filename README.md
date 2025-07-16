@@ -1,1 +1,1 @@
-# Busara
+# Busara the Game of Games A bridge between countries
