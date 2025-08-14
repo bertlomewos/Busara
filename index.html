@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Start loading assets right away, to have them (partly) loaded already when they are requested -->
-  <link rel="preload" href="Build//59985b42135528ef0b7a144e7cb7e991.data" as="fetch" type="application/octet-stream" crossorigin>
+  <link rel="preload" href="Build//93f07717a2902a137caec66d60ed4285.data" as="fetch" type="application/octet-stream" crossorigin>
   <link rel="preload" href="Build/09e151ef6b51841893cbc7e4c78c4c8d.framework.js" as="script">
   <link rel="preload" href="Build/60ff6e00e1f0ed60dd5b7e2a04c6c861.wasm" as="fetch" type="application/wasm" crossorigin>
   <title>Busara</title>
@@ -135,7 +135,7 @@
     var buildUrl = "Build";
     var loaderUrl = buildUrl + "/b7d35f719220cc47cb76adfa1fb7bb97.loader.js";
     var config = {
-      dataUrl: buildUrl + "/59985b42135528ef0b7a144e7cb7e991.data",
+      dataUrl: buildUrl + "/93f07717a2902a137caec66d60ed4285.data",
       frameworkUrl: buildUrl + "/09e151ef6b51841893cbc7e4c78c4c8d.framework.js",
       codeUrl: buildUrl + "/60ff6e00e1f0ed60dd5b7e2a04c6c861.wasm",
       streamingAssetsUrl: "StreamingAssets",
@@ -149,11 +149,6 @@
       // Define a maximum pixel ratio for mobile to avoid rendering at too high resolutions
       const maxPixelRatioMobile = 2.0;
       config.devicePixelRatio = Math.min(window.devicePixelRatio, maxPixelRatioMobile);
-
-	var canvas = document.querySelector("#unity-canvas");
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
-        canvas.style.position = "fixed";
     }
 
     var canvas = document.querySelector("#unity-canvas");
