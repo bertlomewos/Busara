@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en-us">
-
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="debug-console.css">
   <!-- Start loading assets right away, to have them (partly) loaded already when they are requested -->
-  <link rel="preload" href="Build//861f7415a8e25509f6f6b2f91eee237a.data" as="fetch" type="application/octet-stream" crossorigin>
-  <link rel="preload" href="Build/c879088904c2c4a3da06d459fe83d064.framework.js" as="script">
-  <link rel="preload" href="Build/7d4cc3aeb988312c8b352af38f5e9aad.wasm" as="fetch" type="application/wasm" crossorigin>
+  <link rel="preload" href="Build//59985b42135528ef0b7a144e7cb7e991.data" as="fetch" type="application/octet-stream" crossorigin>
+  <link rel="preload" href="Build/09e151ef6b51841893cbc7e4c78c4c8d.framework.js" as="script">
+  <link rel="preload" href="Build/60ff6e00e1f0ed60dd5b7e2a04c6c861.wasm" as="fetch" type="application/wasm" crossorigin>
   <title>Busara</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="manifest" href="manifest.webmanifest">
   <style>
     * {
       padding: 0;
@@ -124,14 +124,20 @@
       <div id="unity-loading-bar-inner"></div>
     </div>
   </div>
-  <script src="Build/0b658c4763c10022f788a36094a527e1.loader.js"></script>
+  <script src="Build/b7d35f719220cc47cb76adfa1fb7bb97.loader.js"></script>
   <script>
+	window.addEventListener("load", function () {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.register("ServiceWorker.js");
+        }
+      });
+
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/0b658c4763c10022f788a36094a527e1.loader.js";
+    var loaderUrl = buildUrl + "/b7d35f719220cc47cb76adfa1fb7bb97.loader.js";
     var config = {
-      dataUrl: buildUrl + "/861f7415a8e25509f6f6b2f91eee237a.data",
-      frameworkUrl: buildUrl + "/c879088904c2c4a3da06d459fe83d064.framework.js",
-      codeUrl: buildUrl + "/7d4cc3aeb988312c8b352af38f5e9aad.wasm",
+      dataUrl: buildUrl + "/59985b42135528ef0b7a144e7cb7e991.data",
+      frameworkUrl: buildUrl + "/09e151ef6b51841893cbc7e4c78c4c8d.framework.js",
+      codeUrl: buildUrl + "/60ff6e00e1f0ed60dd5b7e2a04c6c861.wasm",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "efuyegela",
       productName: "Busara",
@@ -143,13 +149,18 @@
       // Define a maximum pixel ratio for mobile to avoid rendering at too high resolutions
       const maxPixelRatioMobile = 2.0;
       config.devicePixelRatio = Math.min(window.devicePixelRatio, maxPixelRatioMobile);
+
+	var canvas = document.querySelector("#unity-canvas");
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        canvas.style.position = "fixed";
     }
 
     var canvas = document.querySelector("#unity-canvas");
     var loadingContainer = document.querySelector("#unity-loading-container");
     var loadingBar = document.querySelector("#unity-loading-bar-inner");
 
-    var unityGame; // This variable can be used to access the application with .SendMessage() commands
+    var unityGame;
     var script = document.createElement("script");
     script.src = loaderUrl;
     script.onload = function() {
@@ -164,8 +175,6 @@
     };
     document.body.appendChild(script);
   </script>
-  <!-- Add an html debug console and handle unity rich text styling for both html and browser console-->
-  <script src="./debug-console.js"></script>
+  <!-- Parse Unity rich text to render stylized browser console logs -->
 </body>
-
 </html>
