@@ -1,157 +1,197 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Busara</title>
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="manifest" href="manifest.webmanifest">
 
-  <title>Busara</title>
-  <link rel="shortcut icon" href="favicon.ico">
-  <link rel="manifest" href="manifest.webmanifest">
+<!-- Preloads -->
+<link rel="preload" href="Build/93f07717a2902a137caec66d60ed4285.data" as="fetch" type="application/octet-stream" crossorigin>
+<link rel="preload" href="Build/09e151ef6b51841893cbc7e4c78c4c8d.framework.js" as="script">
+<link rel="preload" href="Build/60ff6e00e1f0ed60dd5b7e2a04c6c861.wasm" as="fetch" type="application/wasm" crossorigin>
 
-  <!-- Preloads -->
-  <link rel="preload" href="Build/93f07717a2902a137caec66d60ed4285.data" as="fetch" type="application/octet-stream" crossorigin>
-  <link rel="preload" href="Build/09e151ef6b51841893cbc7e4c78c4c8d.framework.js" as="script">
-  <link rel="preload" href="Build/60ff6e00e1f0ed60dd5b7e2a04c6c861.wasm" as="fetch" type="application/wasm" crossorigin>
+<style>
+  html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    font-family: sans-serif;
+  }
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
+  #unity-container {
+    position: absolute;
+    top: 0; left: 0;
+    display: flex; align-items: center; justify-content: center;
+    width: 100vw; height: 100vh;
+    transition: transform 0.5s;
+  }
 
-    #unity-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  #unity-canvas {
+    display: block;
+    width: 100%; height: 100%;
+    object-fit: fill; /* Stretch canvas to fill container */
+    background-color: #000;
+  }
 
-    #unity-canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: fill; /* Stretch canvas to fill container */
-      background-color: #000;
-    }
+  #unity-loading-container {
+    position: absolute; top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 40px;
+    background-color: #000;
+    transition: 0.8s linear;
+    opacity: 1; visibility: visible;
+  }
 
-    #unity-loading-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 40px;
-      background-color: #000;
-      transition: 0.8s linear;
-      opacity: 1;
-      visibility: visible;
-    }
+  #unity-loading-container.finished { opacity: 0; visibility: collapse; }
 
-    #unity-loading-container.finished {
-      opacity: 0;
-      visibility: collapse;
-    }
+  #unity-loading-container .logo { width: 15%; height: auto; }
 
-    #unity-loading-container .logo {
-      width: 15%;
-      height: auto;
-    }
+  #unity-loading-bar {
+    position: relative; width: 40%; height: 10px;
+    background-color: #fff; border: 1px solid #ccc; border-radius: 10px;
+  }
 
-    #unity-loading-bar {
-      position: relative;
-      width: 40%;
-      height: 10px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
+  #unity-loading-bar-inner {
+    position: absolute; left: 0; top: 0; width: 1%; height: 100%;
+    background-color: #ccc; border-radius: 10px;
+    transition: 0.4s linear;
+  }
 
-    #unity-loading-bar-inner {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 1%;
-      height: 100%;
-      background-color: #ccc;
-      border-radius: 10px;
-      transition: 0.4s linear;
-    }
-  </style>
+  /* Rotate Overlay */
+  #rotate-overlay {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    color: white;
+    display: none; align-items: center; justify-content: center;
+    flex-direction: column;
+    z-index: 9999;
+  }
+
+  #rotate-overlay p {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+  }
+
+  #rotate-button {
+    padding: 15px 40px;
+    font-size: 1.2em;
+    background-color: #3A3F3A;
+    border: 3px solid #FEAD00;
+    color: #FFFFFF;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s all;
+  }
+
+  #rotate-button:hover { background-color: #4B504B; }
+
+</style>
 </head>
 
 <body>
-  <div id="unity-container">
-    <canvas id="unity-canvas"></canvas>
+<div id="unity-container">
+  <canvas id="unity-canvas"></canvas>
+</div>
+
+<div id="unity-loading-container">
+  <img src="logo.svg" class="logo" alt="Logo efuyegela">
+  <div id="unity-loading-bar">
+    <div id="unity-loading-bar-inner"></div>
   </div>
+</div>
 
-  <div id="unity-loading-container">
-    <img src="logo.svg" class="logo" alt="Logo efuyegela">
-    <div id="unity-loading-bar">
-      <div id="unity-loading-bar-inner"></div>
-    </div>
-  </div>
+<!-- Rotate Overlay -->
+<div id="rotate-overlay">
+  <p>Please rotate your device</p>
+  <button id="rotate-button">Rotate to Landscape</button>
+</div>
 
-  <script>
-    window.addEventListener("load", function () {
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("ServiceWorker.js");
-      }
-    });
+<script>
+  const overlay = document.getElementById("rotate-overlay");
+  const rotateButton = document.getElementById("rotate-button");
+  const unityContainer = document.getElementById("unity-container");
+  const canvas = document.getElementById("unity-canvas");
 
-    var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/b7d35f719220cc47cb76adfa1fb7bb97.loader.js";
-    var config = {
-      dataUrl: buildUrl + "/93f07717a2902a137caec66d60ed4285.data",
-      frameworkUrl: buildUrl + "/09e151ef6b51841893cbc7e4c78c4c8d.framework.js",
-      codeUrl: buildUrl + "/60ff6e00e1f0ed60dd5b7e2a04c6c861.wasm",
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "efuyegela",
-      productName: "Busara",
-      productVersion: "1.0",
-    };
-
-    var canvas = document.getElementById("unity-canvas");
-    var loadingContainer = document.getElementById("unity-loading-container");
-    var loadingBar = document.getElementById("unity-loading-bar-inner");
-
-    // Keep canvas stretching on resize
-    function resizeCanvas() {
-      canvas.style.width = window.innerWidth + "px";
-      canvas.style.height = window.innerHeight + "px";
-      document.getElementById("unity-container").style.width = window.innerWidth + "px";
-      document.getElementById("unity-container").style.height = window.innerHeight + "px";
-      document.getElementById("unity-loading-container").style.width = window.innerWidth + "px";
-      document.getElementById("unity-loading-container").style.height = window.innerHeight + "px";
+  // Show overlay if portrait
+  function checkOrientation() {
+    if (window.innerHeight > window.innerWidth) {
+      overlay.style.display = "flex";
+      unityContainer.style.width = window.innerWidth + "px";
+      unityContainer.style.height = window.innerHeight + "px";
+    } else {
+      overlay.style.display = "none";
+      unityContainer.style.transform = "";
+      unityContainer.style.width = window.innerWidth + "px";
+      unityContainer.style.height = window.innerHeight + "px";
     }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
+  }
 
-    // Load Unity WebGL
-    var unityGame;
-    var script = document.createElement("script");
-    script.src = loaderUrl;
-    script.onload = function() {
-      createUnityInstance(canvas, config, function(progress) {
-        loadingBar.style.width = 100 * progress + "%";
-      }).then(function(unityInstance) {
-        unityGame = unityInstance;
-        loadingContainer.classList.add("finished");
-      }).catch(function(message) {
-        alert(message);
-      });
-    };
-    document.body.appendChild(script);
-  </script>
+  // Rotate canvas when user clicks button
+  rotateButton.addEventListener("click", function() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    unityContainer.style.transform = "rotate(90deg)";
+    unityContainer.style.transformOrigin = "center center";
+    unityContainer.style.width = h + "px";
+    unityContainer.style.height = w + "px";
+    overlay.style.display = "none";
+  });
+
+  window.addEventListener("resize", checkOrientation);
+  window.addEventListener("orientationchange", checkOrientation);
+  checkOrientation();
+
+  // Landscape lock (optional)
+  function lockLandscape() {
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock("landscape").catch(err => console.log("Orientation lock failed:", err));
+    }
+  }
+  document.addEventListener("click", lockLandscape, { once: true });
+  document.addEventListener("touchstart", lockLandscape, { once: true });
+</script>
+
+<script>
+  window.addEventListener("load", function () {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("ServiceWorker.js");
+    }
+  });
+
+  var buildUrl = "Build";
+  var loaderUrl = buildUrl + "/b7d35f719220cc47cb76adfa1fb7bb97.loader.js";
+  var config = {
+    dataUrl: buildUrl + "/93f07717a2902a137caec66d60ed4285.data",
+    frameworkUrl: buildUrl + "/09e151ef6b51841893cbc7e4c78c4c8d.framework.js",
+    codeUrl: buildUrl + "/60ff6e00e1f0ed60dd5b7e2a04c6c861.wasm",
+    streamingAssetsUrl: "StreamingAssets",
+    companyName: "efuyegela",
+    productName: "Busara",
+    productVersion: "1.0",
+  };
+
+  var loadingContainer = document.getElementById("unity-loading-container");
+  var loadingBar = document.getElementById("unity-loading-bar-inner");
+
+  // Load Unity WebGL
+  var unityGame;
+  var script = document.createElement("script");
+  script.src = loaderUrl;
+  script.onload = function() {
+    createUnityInstance(canvas, config, function(progress) {
+      loadingBar.style.width = 100 * progress + "%";
+    }).then(function(unityInstance) {
+      unityGame = unityInstance;
+      loadingContainer.classList.add("finished");
+    }).catch(function(message) {
+      alert(message);
+    });
+  };
+  document.body.appendChild(script);
+</script>
 </body>
 </html>
