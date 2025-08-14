@@ -7,7 +7,7 @@
     "theme_color": "#000",
     "description": "Busara",
     "icons": [{
-      "src": "logo.png",
+      "src": "logo.svg",
       "sizes": "256x256",
       "type": "image/png",
       "purpose": "any maskable"
