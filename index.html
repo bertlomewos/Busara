@@ -1,153 +1,176 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Busara</title>
-<link rel="shortcut icon" href="favicon.ico">
-<link rel="manifest" href="manifest.webmanifest">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- Landscape hints -->
+  <meta name="screen-orientation" content="landscape">
+  <meta name="x5-orientation" content="landscape">
+  <meta name="full-screen" content="true">
+  <meta name="x5-fullscreen" content="true">
+  <meta name="browsermode" content="application">
+  <meta name="x5-page-mode" content="app">
 
-<!-- Preloads -->
-<link rel="preload" href="Build/c138eb8b715d00839ec3e88d510217b5.data" as="fetch" type="application/octet-stream" crossorigin>
-<link rel="preload" href="Build/09e151ef6b51841893cbc7e4c78c4c8d.framework.js" as="script">
-<link rel="preload" href="Build/60ff6e00e1f0ed60dd5b7e2a04c6c861.wasm" as="fetch" type="application/wasm" crossorigin>
+  <!-- Preloads -->
+  <link rel="preload" href="Build/c138eb8b715d00839ec3e88d510217b5.data" as="fetch" type="application/octet-stream" crossorigin>
+  <link rel="preload" href="Build/09e151ef6b51841893cbc7e4c78c4c8d.framework.js" as="script">
+  <link rel="preload" href="Build/60ff6e00e1f0ed60dd5b7e2a04c6c861.wasm" as="fetch" type="application/wasm" crossorigin>
 
-<style>
-html, body {
-  margin: 0; padding: 0;
-  width: 100%; height: 100%;
-  overflow: hidden;
-  font-family: sans-serif;
-  background-color: #ffffff; /* White background */
-}
+  <title>Busara</title>
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="manifest" href="manifest.webmanifest">
 
-#unity-container {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  transition: transform 0.5s;
-}
+  <style>
+    * { padding: 0; margin: 0; }
+    html, body { height: 100%; width: 100%; text-align: center; }
 
-#unity-canvas {
-  display: block;
-  width: 100%; height: 100%;
-  object-fit: fill;
-  background-color: #ffffff; /* White canvas background */
-}
+    #unity-container {
+      position: absolute;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
 
-#unity-loading-container {
-  position: absolute; top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 40px;
-  background-color: #ffffff; /* White loading background */
-  transition: 0.8s linear;
-  opacity: 1; visibility: visible;
-}
+    #unity-canvas {
+      width: 100%; height: 100%;
+      background-color: #fff;
+    }
 
-#unity-loading-container.finished { opacity: 0; visibility: collapse; }
-#unity-loading-container .logo { width: 15%; height: auto; }
+    #unity-loading-container {
+      position: absolute; left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 40px;
+      opacity: 1; visibility: visible;
+      transition: 800ms linear;
+    }
 
-#unity-loading-bar {
-  position: relative; width: 40%; height: 10px;
-  background-color: #ccc; border: 1px solid #ccc; border-radius: 10px;
-}
+    #unity-loading-container.finished {
+      opacity: 0; visibility: collapse;
+    }
 
-#unity-loading-bar-inner {
-  position: absolute; left: 0; top: 0; width: 1%; height: 100%;
-  background-color: #FEAD00; border-radius: 10px; /* yellow progress bar */
-  transition: 0.4s linear;
-}
-</style>
+    #unity-loading-container .logo { width: 15%; height: 15%; }
+
+    #unity-loading-bar {
+      position: relative; width: 40%; height: 10px;
+      background-color: #fff; border: 1px solid #ccc; border-radius: 10px;
+    }
+
+    #unity-loading-bar-inner {
+      position: absolute; left: 0; top: 0; width: 1%; height: 100%;
+      background-color: #ccc; border-radius: 10px;
+      transition: 400ms linear;
+    }
+
+    /* Rotate Device Overlay */
+    #rotate-overlay {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      color: white;
+      display: none; align-items: center; justify-content: center;
+      flex-direction: column;
+      z-index: 9999;
+      font-family: sans-serif;
+    }
+
+    #rotate-overlay img {
+      width: 100px; height: auto;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 
 <body>
-<div id="unity-container">
-  <canvas id="unity-canvas"></canvas>
-</div>
-
-<div id="unity-loading-container">
-  <img src="logo.svg" class="logo" alt="Logo efuyegela">
-  <div id="unity-loading-bar">
-    <div id="unity-loading-bar-inner"></div>
+  <div id="unity-container">
+    <canvas id="unity-canvas"></canvas>
   </div>
-</div>
 
-<script>
-const unityContainer = document.getElementById("unity-container");
+  <div id="unity-loading-container">
+    <img src="logo.svg" class="logo" alt="Logo efuyegela">
+    <div id="unity-loading-bar">
+      <div id="unity-loading-bar-inner"></div>
+    </div>
+  </div>
 
-// Automatically rotate and stretch canvas
-function adjustCanvasOrientation() {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+  <!-- Rotate Device Overlay -->
+  <div id="rotate-overlay">
+    <img src="rotate-icon.svg" alt="Rotate Device">
+    <p>Please rotate your device</p>
+  </div>
 
-    if (h > w) {
-        // Portrait: rotate canvas 90° visually
-        unityContainer.style.transform = "rotate(90deg) translateY(-100%)";
-        unityContainer.style.transformOrigin = "top left";
-        unityContainer.style.width = h + "px";
-        unityContainer.style.height = w + "px";
-    } else {
-        // Landscape: normal
-        unityContainer.style.transform = "none";
-        unityContainer.style.width = w + "px";
-        unityContainer.style.height = h + "px";
+  <script>
+    // Try locking landscape on supported browsers
+    function lockLandscape() {
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock("landscape").catch(err => {
+          console.log("Orientation lock failed:", err);
+        });
+      }
     }
-}
 
-// Listen for orientation changes and resize
-window.addEventListener("resize", adjustCanvasOrientation);
-window.addEventListener("orientationchange", adjustCanvasOrientation);
+    // Check orientation and show overlay if portrait
+    function checkOrientation() {
+      const overlay = document.getElementById("rotate-overlay");
+      if (window.innerHeight > window.innerWidth) {
+        overlay.style.display = "flex";
+      } else {
+        overlay.style.display = "none";
+      }
+    }
 
-// Apply on page load
-adjustCanvasOrientation();
-</script>
+    // Listen for changes
+    window.addEventListener("resize", checkOrientation);
+    window.addEventListener("orientationchange", checkOrientation);
+    document.addEventListener("click", lockLandscape, { once: true });
+    document.addEventListener("touchstart", lockLandscape, { once: true });
+    checkOrientation();
+  </script>
 
-<script>
-window.addEventListener("load", function () {
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("ServiceWorker.js");
-  }
-});
+  <script>
+    window.addEventListener("load", function () {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("ServiceWorker.js");
+      }
+    });
 
-var buildUrl = "Build";
-var loaderUrl = buildUrl + "/b7d35f719220cc47cb76adfa1fb7bb97.loader.js";
-var config = {
-  dataUrl: buildUrl + "/c138eb8b715d00839ec3e88d510217b5.data",
-  frameworkUrl: buildUrl + "/09e151ef6b51841893cbc7e4c78c4c8d.framework.js",
-  codeUrl: buildUrl + "/60ff6e00e1f0ed60dd5b7e2a04c6c861.wasm",
-  streamingAssetsUrl: "StreamingAssets",
-  companyName: "efuyegela",
-  productName: "Busara",
-  productVersion: "1.0",
-};
+    var buildUrl = "Build";
+    var loaderUrl = buildUrl + "/b7d35f719220cc47cb76adfa1fb7bb97.loader.js";
+    var config = {
+      dataUrl: buildUrl + "/c138eb8b715d00839ec3e88d510217b5.data",
+      frameworkUrl: buildUrl + "/09e151ef6b51841893cbc7e4c78c4c8d.framework.js",
+      codeUrl: buildUrl + "/60ff6e00e1f0ed60dd5b7e2a04c6c861.wasm",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "efuyegela",
+      productName: "Busara",
+      productVersion: "1.0",
+    };
 
-// Device pixel ratio adjustment for mobile
-var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-if(isMobile) {
-  const maxPixelRatioMobile = 2.0;
-  config.devicePixelRatio = Math.min(window.devicePixelRatio, maxPixelRatioMobile);
-}
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if(isMobile) {
+      const maxPixelRatioMobile = 2.0;
+      config.devicePixelRatio = Math.min(window.devicePixelRatio, maxPixelRatioMobile);
+    }
 
-var canvas = document.querySelector("#unity-canvas");
-var loadingContainer = document.querySelector("#unity-loading-container");
-var loadingBar = document.querySelector("#unity-loading-bar-inner");
+    var canvas = document.querySelector("#unity-canvas");
+    var loadingContainer = document.querySelector("#unity-loading-container");
+    var loadingBar = document.querySelector("#unity-loading-bar-inner");
 
-var unityGame;
-var script = document.createElement("script");
-script.src = loaderUrl;
-script.onload = function() {
-  createUnityInstance(canvas, config, function(progress) {
-    loadingBar.style.width = 100 * progress + "%";
-  }).then(function(unityInstance) {
-    unityGame = unityInstance;
-    loadingContainer.classList.add("finished");
-  }).catch(function(message) {
-    alert(message);
-  });
-};
-document.body.appendChild(script);
-</script>
+    var unityGame;
+    var script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = function() {
+      createUnityInstance(canvas, config, function(progress) {
+        loadingBar.style.width = 100 * progress + "%";
+      }).then(function(unityInstance) {
+        unityGame = unityInstance;
+        loadingContainer.classList.add("finished");
+      }).catch(function(message) {
+        alert(message);
+      });
+    };
+    document.body.appendChild(script);
+  </script>
 </body>
 </html>
