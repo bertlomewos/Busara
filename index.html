@@ -80,6 +80,7 @@
       margin-bottom: 20px;
     }
   </style>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 
 <body>
@@ -108,6 +109,7 @@
         });
       }
     }
+    
 
     // Check orientation and show overlay if portrait
     function checkOrientation() {
@@ -126,7 +128,18 @@
     document.addEventListener("touchstart", lockLandscape, { once: true });
     checkOrientation();
   </script>
+<script>
+  const tg = window.Telegram.WebApp;
 
+  // Request full-screen mode
+  tg.expand();
+
+  // (Optional) Lock background color to match your game theme
+  tg.setBackgroundColor("#000000");
+
+  // (Optional) Disable closing until user presses a quit button
+  tg.disableVerticalSwipes();
+</script>
   <script>
     window.addEventListener("load", function () {
       if ("serviceWorker" in navigator) {
