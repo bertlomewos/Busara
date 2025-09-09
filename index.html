@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Landscape hints -->
   <meta name="screen-orientation" content="landscape">
@@ -10,11 +10,6 @@
   <meta name="x5-fullscreen" content="true">
   <meta name="browsermode" content="application">
   <meta name="x5-page-mode" content="app">
-
-  <!-- Preloads -->
-  <link rel="preload" href="Build/0e4bf3e6335e74c5d452cd593a669cf3.data" as="fetch" type="application/octet-stream" crossorigin>
-  <link rel="preload" href="Build/7397bd1a81bfb6a50a72623ea0cd0b10.framework.js" as="script">
-  <link rel="preload" href="Build/b9b65e607d67deb59bf6827c9406fbaf.wasm" as="fetch" type="application/wasm" crossorigin>
 
   <title>Busara</title>
   <link rel="shortcut icon" href="favicon.ico">
@@ -99,6 +94,27 @@
     <p>Please rotate your device</p>
   </div>
 
+  <!-- Telegram Web App Integration -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    // Wait until Telegram WebApp is ready
+    if (window.Telegram) {
+      const tg = window.Telegram.WebApp;
+
+      // Expand the WebApp to full height
+      tg.expand();
+
+      // Hide Telegram header
+      tg.MainButton.hide();
+      tg.BackButton.hide();
+
+      // Optional: listen for close
+      tg.onEvent("themeChanged", () => {
+        // React to Telegram theme changes if needed
+      });
+    }
+  </script>
+
   <script>
     // Try locking landscape on supported browsers
     function lockLandscape() {
@@ -112,11 +128,7 @@
     // Check orientation and show overlay if portrait
     function checkOrientation() {
       const overlay = document.getElementById("rotate-overlay");
-      if (window.innerHeight > window.innerWidth) {
-        overlay.style.display = "flex";
-      } else {
-        overlay.style.display = "none";
-      }
+      overlay.style.display = (window.innerHeight > window.innerWidth) ? "flex" : "none";
     }
 
     // Listen for changes
